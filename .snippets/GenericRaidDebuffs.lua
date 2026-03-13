@@ -27,7 +27,6 @@ local offset = #debuffs
 -- Cell.snippetVars.instanceNameMapping and .loadedDebuffs are set in
 -- RaidDebuffs.lua before snippets run (lines 24 and 70).
 local instanceNameMapping = Cell.snippetVars.instanceNameMapping
-local loadedDebuffs = Cell.snippetVars.loadedDebuffs
 
 -- Cache original so we can call it.
 local _GetDebuffList = F.GetDebuffList

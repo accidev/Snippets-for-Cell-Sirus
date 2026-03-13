@@ -1,5 +1,5 @@
--- 2023-10-07 07:16:43 GMT+8
--- by honeyhoney
+-- 2026-03-13
+-- sort raid by name list (/csort)
 local nameList = {
     -- "member1,member2,member3,..."
     "", -- Group 1

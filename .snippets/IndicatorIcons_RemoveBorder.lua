@@ -1,7 +1,6 @@
 -------------------------------------------------
--- 2025-04-11 17:11:18 GMT+8
+-- 2026-03-13
 -- remove icons border
--- 删除图标指示器的边框
 -------------------------------------------------
 local create = Cell.iFuncs.CreateAura_BarIcon
 Cell.iFuncs.CreateAura_BarIcon = function(name, parent)

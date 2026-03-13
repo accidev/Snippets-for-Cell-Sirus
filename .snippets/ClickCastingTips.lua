@@ -1,7 +1,6 @@
 -------------------------------------------------
--- 2025-03-07 15:11:04 GMT+8
+-- 2026-03-13
 -- show tips for click-casting bindings (spell only)
--- 点击施法所绑定法术的鼠标提示
 -------------------------------------------------
 local showOnlyCurrentModifiers = true
 local point = "TOPRIGHT"
@@ -62,8 +61,6 @@ local function GetBindingDisplay(modifier, key)
     modifier = modifier:gsub("alt", "Alt")
     modifier = modifier:gsub("ctrl", "Ctrl")
     modifier = modifier:gsub("shift", "Shift")
-    modifier = modifier:gsub("meta", "Command")
-
     if strfind(key, "^NUM") then
         key = _G["KEY_"..key]
     elseif strlen(key) ~= 1 then
@@ -139,9 +136,6 @@ local function ShowTips()
                 end
                 if IsAltKeyDown() then
                     show = show or modifier:find("alt")
-                end
-                if IsMetaKeyDown() then
-                    show = show or modifier:find("meta")
                 end
             else
                 show = modifier == ""

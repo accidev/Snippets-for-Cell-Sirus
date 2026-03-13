@@ -1,7 +1,6 @@
 -------------------------------------------------
--- 2024-06-27 13:59:55 GMT+8
+-- 2026-03-13
 -- pvp status icon
--- pvp状态图标
 -------------------------------------------------
 -- relative to unit button
 local point, relativePoint, x, y = "CENTER", "BOTTOMRIGHT", -2, 3

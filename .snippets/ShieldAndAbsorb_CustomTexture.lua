@@ -1,15 +1,15 @@
--- 2024-05-18 02:24:31 GMT+8
+-- 2026-03-13
 Cell.funcs.IterateAllUnitButtons(function(b)
-    -- current health bar texture / 当前血条材质: Cell.vars.texture
-    -- default health bar texture / 默认血条材质: "Interface\\AddOns\\Cell\\Media\\statusbar.tga"
+    -- current health bar texture: Cell.vars.texture
+    -- default health bar texture: "Interface\\AddOns\\Cell\\Media\\statusbar.tga"
 
-    -- shield texture / 护盾材质
-    -- default/默认: "Interface\\AddOns\\Cell\\Media\\shield.tga"
+    -- shield texture
+    -- default: "Interface\\AddOns\\Cell\\Media\\shield.tga"
     b.widgets.shieldBar:SetTexture("Interface\\AddOns\\Cell\\Media\\shield.tga", "REPEAT", "REPEAT")
     b.widgets.shieldBarR:SetTexture("Interface\\AddOns\\Cell\\Media\\shield.tga", "REPEAT", "REPEAT")
 
-    -- absorb texture (retail only, nil on Sirus) / 治疗吸收材质（仅正式服，Sirus 上为 nil）
-    -- default/默认: "Interface\\AddOns\\Cell\\Media\\shield.tga"
+    -- absorb texture (retail only, nil on Sirus)
+    -- default: "Interface\\AddOns\\Cell\\Media\\shield.tga"
     if b.widgets.absorbsBar then
         b.widgets.absorbsBar:SetTexture("Interface\\AddOns\\Cell\\Media\\shield.tga", "REPEAT", "REPEAT")
     end

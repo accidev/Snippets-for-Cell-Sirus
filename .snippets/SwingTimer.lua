@@ -1,7 +1,6 @@
 -------------------------------------------------
--- 2024-06-27 14:00:21 GMT+8
+-- 2026-03-13
 -- add a swingTimer bar for each unitbutton
--- 为单位按钮添加一个被普攻的计时条
 -------------------------------------------------
 local SOURCE = "target"
 local ONLY_SHOW_SOURCE = false
