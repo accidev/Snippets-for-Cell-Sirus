@@ -31,14 +31,11 @@ local function Display(b, sourceGUID)
 
     -- if SOURCE not exists then check all nameplates
     elseif not (ONLY_SHOW_SOURCE or b.swingTimer.lock) then
-        -- no UnitTokenFromGUID in classic
-        local plates = C_NamePlate.GetNamePlates()
-        for _, p in pairs(plates) do
-            local guid = UnitGUID(p.namePlateUnitToken)
-            if guid == sourceGUID then
-                b.swingTimer:Display(p.namePlateUnitToken)
+        for i = 1, 40 do
+            local token = "nameplate"..i
+            if UnitExists(token) and UnitGUID(token) == sourceGUID then
+                b.swingTimer:Display(token)
                 timers[sourceGUID] = b.swingTimer
-                -- b.swingTimer.lock = true
                 break
             end
         end
@@ -75,8 +72,8 @@ end)
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-eventFrame:SetScript("OnEvent", function(self, event)
-    local _, subEvent, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
+eventFrame:SetScript("OnEvent", function(self, event, ...)
+    local _, subEvent, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags = ...
     if subEvent == "SWING_DAMAGE" or subEvent == "SWING_MISSED" then
         F.HandleUnitButton("guid", destGUID, Display, sourceGUID)
     elseif subEvent == "UNIT_DIED" then

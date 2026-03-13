@@ -8,7 +8,9 @@ Cell.funcs.IterateAllUnitButtons(function(b)
     b.widgets.shieldBar:SetTexture("Interface\\AddOns\\Cell\\Media\\shield.tga", "REPEAT", "REPEAT")
     b.widgets.shieldBarR:SetTexture("Interface\\AddOns\\Cell\\Media\\shield.tga", "REPEAT", "REPEAT")
 
-    -- absorb texture (retail) / 治疗吸收材质（正式服）
+    -- absorb texture (retail only, nil on Sirus) / 治疗吸收材质（仅正式服，Sirus 上为 nil）
     -- default/默认: "Interface\\AddOns\\Cell\\Media\\shield.tga"
-    b.widgets.absorbsBar:SetTexture("Interface\\AddOns\\Cell\\Media\\shield.tga", "REPEAT", "REPEAT")
+    if b.widgets.absorbsBar then
+        b.widgets.absorbsBar:SetTexture("Interface\\AddOns\\Cell\\Media\\shield.tga", "REPEAT", "REPEAT")
+    end
 end)

@@ -1,69 +1,63 @@
 ---------------------------------------------------------------------
--- 2024-05-18 02:09:39 GMT+8
----------------------------------------------------------------------
 -- show these debuffs as Raid Debuffs in M+ with HIGHEST priority
--- 在当前赛季的大秘境副本中，通过“副本减益”指示器显示这些减益，且这些减益的优先级为最高
 local debuffs = {
-    -- 373509, -- Shadow Claws 暗影利爪
+    -- WotLK M+ spell IDs (fill in as needed)
+    -- example: 48438, -- Ebon Plague (Death Knight)
+    -- example: 55078, -- Blood Plague (Death Knight)
 }
 
--- enabled in these instances as well
--- 在下列副本中也启用上述减益
+-- enabled in these instances as well (by instance map ID)
+-- WotLK instance IDs:
+--   533 = Naxxramas
+--   615 = The Obsidian Sanctum
+--   616 = The Eye of Eternity
+--   624 = Vault of Archavon
+--   631 = Icecrown Citadel
+--   649 = Trial of the Crusader
+--   724 = The Ruby Sanctum
 local instances = {
-    -- [1207] = true, -- Amirdrassil, the Dream's Hope 阿梅达希尔，梦境之愿
+    -- [631] = true, -- Icecrown Citadel
 }
 ---------------------------------------------------------------------
 
 local F = Cell.funcs
 local offset = #debuffs
+
+-- Both tables are populated by reference — safe to capture at load time.
+-- Cell.snippetVars.instanceNameMapping and .loadedDebuffs are set in
+-- RaidDebuffs.lua before snippets run (lines 24 and 70).
 local instanceNameMapping = Cell.snippetVars.instanceNameMapping
 local loadedDebuffs = Cell.snippetVars.loadedDebuffs
-local mythicPlusDungeons = EJ_GetTierInfo(EJ_GetNumTiers())
+
+-- Cache original so we can call it.
+local _GetDebuffList = F.GetDebuffList
 
 function F.GetDebuffList(instanceName)
-    local list = {}
-    local eName, iIndex, iId = F.SplitToNumber(":", instanceNameMapping[instanceName])
+    -- Start with the base list from the real implementation.
+    local list = _GetDebuffList(instanceName)
 
-    if eName == mythicPlusDungeons or instances[iId] then
-        for i, id in pairs(debuffs) do
-            list[id] = {["order"]=i, ["condition"]={"None"}}
-        end
+    if not instanceName then
+        return list
     end
 
-    if iId and loadedDebuffs[iId] then
-        local n = 0
-        -- check general
-        if loadedDebuffs[iId]["general"] then
-            n = #loadedDebuffs[iId]["general"]["enabled"]
-            for _, t in ipairs(loadedDebuffs[iId]["general"]["enabled"]) do
-                local spellName = F.GetSpellInfo(t["id"])
-                if spellName then
-                    -- list[spellName/spellId] = {order, glowType, glowOptions}
-                    if t["trackByID"] then
-                        list[t["id"]] = {["order"]=t["order"]+offset, ["condition"]=t["condition"], ["glowType"]=t["glowType"], ["glowOptions"]=t["glowOptions"], ["glowCondition"]=t["glowCondition"]}
-                    else
-                        list[spellName] = {["order"]=t["order"]+offset, ["condition"]=t["condition"], ["glowType"]=t["glowType"], ["glowOptions"]=t["glowOptions"], ["glowCondition"]=t["glowCondition"]}
-                    end
-                end
-            end
-        end
-        -- check boss
-        for bId, bTable in pairs(loadedDebuffs[iId]) do
-            if bId ~= "general" then
-                for _, st in pairs(bTable["enabled"]) do
-                    local spellName = F.GetSpellInfo(st["id"])
-                    if spellName then -- check again
-                        if st["trackByID"] then
-                            list[st["id"]] = {["order"]=st["order"]+n+offset, ["condition"]=st["condition"], ["glowType"]=st["glowType"], ["glowOptions"]=st["glowOptions"], ["glowCondition"]=st["glowCondition"]}
-                        else
-                            list[spellName] = {["order"]=st["order"]+n+offset, ["condition"]=st["condition"], ["glowType"]=st["glowType"], ["glowOptions"]=st["glowOptions"], ["glowCondition"]=st["glowCondition"]}
-                        end
-                    end
-                end
-            end
+    local result = instanceNameMapping[instanceName]
+    if not result then
+        return list
+    end
+
+    local eName, iIndex, iId = F.SplitToNumber(":", result)
+
+    -- On Sirus, M+ is detected via C_MythicPlus.IsMythicPlusActive().
+    -- instances[] allows forcing extra debuffs in specific non-M+ instances too.
+    local isMythicPlus = C_MythicPlus and C_MythicPlus.IsMythicPlusActive()
+
+    if isMythicPlus or instances[iId] then
+        for i, id in ipairs(debuffs) do
+            -- Insert at the front by using negative order values so these
+            -- always sort before the regular debuffs (order 1+).
+            list[id] = { ["order"] = i - offset - 1, ["condition"] = { "None" } }
         end
     end
-    -- texplore(list)
 
     return list
 end

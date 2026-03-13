@@ -1,4 +1,6 @@
 -- CompactUnitFrame_OpenMenu
+local dropdown = CreateFrame("Frame", "CellUnitPopupDropdown", UIParent, "UIDropDownMenuTemplate")
+
 function CellUnitFrame_OpenMenu()
     local button = Cell.funcs.GetUnitButtonByGUID(UnitGUID("mouseover") or "")
     if not button then return end
@@ -28,10 +30,6 @@ function CellUnitFrame_OpenMenu()
     end
 
     if which then
-        local contextData = {
-            unit = unit,
-            name = name,
-        }
-        UnitPopup_OpenMenu(which, contextData)
+        UnitPopup_ShowMenu(dropdown, which, unit, name)
     end
 end
